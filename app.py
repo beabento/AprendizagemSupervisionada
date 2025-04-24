@@ -325,9 +325,10 @@ bolsas_desconto = st.selectbox('BOLSAS DE DESCONTO:', ['SIN BENEFICIO', 'CONVENI
                                                     'SOCIOECONOMICA - UTP', 'MADREDIOSENSE - UTP',
                                                     'BECA ALTO POTENCIAL', 'BECA TALENTO UTP'])
 
-st.button('Prever Inadimplência')
+prever_clicado = st.button('Prever Inadimplência')
+
 # Botão para realizar a previsão
-if st.button('Prever Inadimplência'):
+if prever_clicado:
     # Criar um dicionário com os dados do formulário
     dados_usuario = {
         'GENERO': [genero],
