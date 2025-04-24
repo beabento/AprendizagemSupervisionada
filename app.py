@@ -325,10 +325,44 @@ bolsas_desconto = st.selectbox('BOLSAS DE DESCONTO:', ['SIN BENEFICIO', 'CONVENI
                                                     'SOCIOECONOMICA - UTP', 'MADREDIOSENSE - UTP',
                                                     'BECA ALTO POTENCIAL', 'BECA TALENTO UTP'])
 
+# Exemplo de Aléssio:
 
-st.markdown(f"""... e assim em diante: temos que colocar todas as variáveis e opções do nosso modelo.
-            Ver o exemplo que o professor deu sobre o titanic para referencia.
-            Pode ser que escolhemos variáveis demais e que nem todas sejam relevantes.
-            O ideal é a gente enxugar o nosso modelo e gerar de novo o pkl, com no máximo 5 ou 7 variáveis.
-            Tem que ver no codigo projeto_escola_peru.ipynb, no mesmo repositório do github.
-            Simbora!""")
+# sexo = st.selectbox('Sexo:', ['Feminino', 'Masculino'])
+# idade = st.number_input('Idade ', value=40, placeholder='Digite sua idade')
+
+# age0 = modelo['escala'][0]['age'][0]
+# age1 = modelo['escala'][0]['age'][1]
+
+# df = pd.DataFrame({
+#     'age': [ (idade - age0)/(age1-age0) ],
+#     'sibsp': [0.361169], 'parch': [0], 'fare': [0.412503],
+#     'pclass_2': [False], 'pclass_3': [False], 
+#     'sex_male': [sexo=='Masculino'],
+#     'embarked_Q': [False], 'embarked_S': [True]
+# })
+
+# df['age'] = df['age'].clip(0,1)
+
+# st.subheader('Dados normalizados')
+# st.table(df)
+
+# if st.button('Prever'):
+#     st.header('Resultados')
+
+#     prev, prob = make_prediction(df)
+#     chart_data = pd.DataFrame(
+#         {"Probabilidade": prob[0],
+#          "Classe prevista": ['Morreria', 'Sobreviveria']}
+#     )
+
+#     st.bar_chart(chart_data, x="Classe prevista", y="Probabilidade")
+
+#     classe = "Óbito"
+#     if prev[0]==1:
+#         classe = 'Sobrevivente'
+#     st.write('Classe predita:', classe)
+#     st.write('Probabilidades:')
+#     for classe, probabilidade in zip(params.classes_, prob[0]):
+#         st.write(f'{classe}: {probabilidade:.2f}')
+        
+
