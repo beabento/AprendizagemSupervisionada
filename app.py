@@ -12,14 +12,16 @@ def classificar(df):
     previsoes = params.predict(df)
     return previsoes, params.predict_proba(df)
 
-st.set_page_config("Probabilidade de inadimplência", "💸")
+st.set_page_config("PrevInad: previna a inadimplência", "💸")
 
-st.title("Probabilidade de inadimplência")
+st.title("PrevInad")
 
 st.markdown(f"""
-Esta Aplicação faz uso de modelos de ML para prever a probabilidade de um aluno se tornar inadimplente.
+PrevInad é uma aplicação prever a probabilidade de um aluno se tornar inadimplente, 
+através do uso de modelos de Aprendizado de Máquina (Machine Learning).
+
 O modelo usado neste APP foi selecionado por meio de uma validação cruzada, tendo um F1
-de {round(modelo['f1']*100)}%. E o Modelo com maior precisáo foi o {modelo['metodo']}.
+de {round(modelo['f1']*100)}%. E o Modelo com maior precisão foi o {modelo['metodo']}.
 """)
 
 
