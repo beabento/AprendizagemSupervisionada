@@ -33,5 +33,5 @@ st.markdown(f"""... e assim em diante: temos que colocar todas as variáveis e o
             Ver o exemplo que o professor deu sobre o titanic para referencia.
             Pode ser que escolhemos variáveis demais e que nem todas sejam relevantes.
             O ideal é a gente enxugar o nosso modelo e gerar de novo o pkl, com no máximo 5 ou 7 variáveis.
-            Tem que ver no codigo projeto_excola_peru.ipynb, no mesmo repositório do github.
+            Tem que ver no codigo projeto_escola_peru.ipynb, no mesmo repositório do github.
             Simbora!""")
