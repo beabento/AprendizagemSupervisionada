@@ -219,7 +219,7 @@ distrito = st.selectbox('DISTRITO:', ['BRENA', 'VILLA MARIA DEL TRIUNFO', 'JESUS
                                         'CHIQUIAN', 'HUARANGO', 'BAMBAMARCA', 'PACUCHA', 'TANTARA',
                                         'SHUNQUI', 'NINACACA', 'CASTROVIRREYNA', 'YUYAPICHIS', 'PICHIGUA',
                                         'SAN PEDRO DE LARCAY', 'LA PECA', 'PATAMBUCO', 'ASCENCION',
-                                        'REQUENA', 'CALZADA', 'SAN MARTIN']
+                                        'REQUENA', 'CALZADA', 'SAN MARTIN'])
 
 deficiencia = st.selectbox('DEFICIENCIA:', ['No', 'Si'])
 
