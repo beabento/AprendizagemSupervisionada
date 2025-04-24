@@ -325,6 +325,56 @@ bolsas_desconto = st.selectbox('BOLSAS DE DESCONTO:', ['SIN BENEFICIO', 'CONVENI
                                                     'SOCIOECONOMICA - UTP', 'MADREDIOSENSE - UTP',
                                                     'BECA ALTO POTENCIAL', 'BECA TALENTO UTP'])
 
+
+# Botão para realizar a previsão
+if st.button('Prever Inadimplência'):
+    # Criar um dicionário com os dados do formulário
+    dados_usuario = {
+        'GENERO': [genero],
+        'PAG_2022': [pag_2022],
+        'CURSO_EM_RISCO': [curso_em_risco_normalizado],
+        'NUM_DISCIPLINAS_MATRICULADAS': [num_disciplinas_normalizado],
+        'DEPARTAMENTO': [departamento],
+        'PROVINCIA': [provincia],
+        'DISTRITO': [distrito],
+        'DEFICIENCIA': [deficiencia],
+        'MODALIDADE_ENSINO': [modalidade_ensino],
+        'TURNO_HORARIO': [turno_horario],
+        'PROGRAMA_CURSO': [programa_curso],
+        'MATRICULA': [matricula],
+        'CLASSIFICACION': [classificacao],
+        'CAMPUS': [campus],
+        'FACULTAD': [faculdade],
+        'FAIXA_ETARIA': [faixa_etaria],
+        'BOLSAS_DESCONTO': [bolsas_desconto]
+    }
+
+    # Criar um DataFrame a partir dos dados do usuário
+    df_usuario = pd.DataFrame(dados_usuario)
+
+    # Pré-processamento de variáveis categóricas
+    # *** IMPORTANTE: Adapte esta seção de acordo com o pré-processamento
+    # *** que foi feito nos seus dados de treinamento.
+
+    if label_encoders:
+        for coluna, encoder in label_encoders.items():
+            if coluna in df_usuario.columns:
+                df_usuario[coluna] = encoder.transform(df_usuario[coluna])
+    else:
+        st.warning("Aviso: Nenhum LabelEncoder encontrado no modelo. Certifique-se de que as variáveis categóricas estão no formato esperado pelo modelo.")
+
+    # Realizar a classificação
+    previsao, probabilidades = classificar(df_usuario)
+
+    # Exibir o resultado
+    st.header('Resultado da Previsão:')
+    if previsao[0] == 1:  # Assumindo que 1 representa inadimplente
+        st.error('ALERTA: O aluno tem alta probabilidade de se tornar inadimplente.')
+        st.write(f'Probabilidade de inadimplência: {probabilidades[0][1]:.2f}')
+    else:
+        st.success('O aluno tem baixa probabilidade de se tornar inadimplente.')
+        st.write(f'Probabilidade de não inadimplência: {probabilidades[0][0]:.2f}')
+
 # Exemplo de Aléssio:
 
 # sexo = st.selectbox('Sexo:', ['Feminino', 'Masculino'])
