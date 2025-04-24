@@ -30,6 +30,42 @@ genero = st.selectbox('Gênero:', ['Feminino', 'Masculino', 'Indeterminado'])
 
 pag_2022 = st.selectbox('Pagou a anuidade de 2022?', ['Sim','Não'])
 
+curso_em_risco_original = st.slider('CURSO EM RISCO (0-5):', 0, 5, 0)
+# Normalização para o intervalo [0. , 0.4, 0.2, 0.6, 1. , 0.8]
+# Vamos mapear os valores originais para os normalizados.
+# Assumindo uma correspondência linear aproximada, mas a ordem dos normalizados não é estritamente crescente.
+# Uma maneira mais robusta seria ter um dicionário de mapeamento se a relação não for linear.
+mapeamento_curso_risco = {
+    0: 0.0,
+    1: 0.4,
+    2: 0.2,
+    3: 0.6,
+    4: 1.0,
+    5: 0.8
+}
+curso_em_risco_normalizado = mapeamento_curso_risco[curso_em_risco_original]
+
+num_disciplinas_original = st.slider('NUMERO DE DISCIPLINAS MATRICULADAS (0-6):', 0, 6, 0)
+# Normalização para o intervalo [0.        , 0.5       , 0.16666667, 0.33333333, 0.66666667, 0.83333333, 1.        ]
+# Novamente, assumindo uma correspondência por índice, já que a relação não é estritamente linear.
+# Uma maneira mais robusta seria ter um dicionário de mapeamento.
+mapeamento_num_disciplinas = {
+    0: 0.0,
+    1: 0.5,
+    2: 0.16666667,
+    3: 0.33333333,
+    4: 0.66666667,
+    5: 0.83333333,
+    6: 1.0
+}
+num_disciplinas_normalizado = mapeamento_num_disciplinas[num_disciplinas_original]
+
+# Agora, 'curso_em_risco_normalizado' e 'num_disciplinas_normalizado' contêm os valores
+# normalizados que você pode usar para alimentar seu modelo de machine learning
+# dentro do DataFrame 'df'. Por exemplo:
+# df['CURSO EM RISCO'] = [curso_em_risco_normalizado]
+# df['NUMERO DE DISCIPLINAS MATRICULADAS'] = [num_disciplinas_normalizado]
+
 departamento = st.selectbox('DEPARTAMENTO:', ['LIMA', 'CALLAO', 'AMAZONAS', 'ICA', 'AREQUIPA', 'SAN MARTIN',
                                             'JUNIN', 'LA LIBERTAD', 'HUANUCO', 'AYACUCHO', 'ANCASH', 'PASCO',
                                             'CUSCO', 'LAMBAYEQUE', 'HUANCAVELICA', 'PIURA', 'CAJAMARCA',
