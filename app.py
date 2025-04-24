@@ -17,7 +17,7 @@ st.set_page_config("PrevInad: previna a inadimplência", "💸")
 st.title("PrevInad")
 
 st.markdown(f"""
-PrevInad é uma aplicação prever a probabilidade de um aluno se tornar inadimplente, 
+PrevInad é uma aplicação que prevê a probabilidade de um aluno se tornar inadimplente, 
 através do uso de modelos de Aprendizado de Máquina (Machine Learning).
 
 O modelo usado neste APP foi selecionado por meio de uma validação cruzada, tendo um F1
