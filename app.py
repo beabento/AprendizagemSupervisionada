@@ -30,8 +30,6 @@ genero = st.selectbox('Gênero:', ['Feminino', 'Masculino', 'Indeterminado'])
 
 pag_2022 = st.selectbox('Pagou a anuidade de 2022?', ['Sim','Não'])
 
-genero = st.selectbox('Gênero:', ['Feminino', 'Masculino', 'Indeterminado'])
-
 departamento = st.selectbox('DEPARTAMENTO:', ['LIMA', 'CALLAO', 'AMAZONAS', 'ICA', 'AREQUIPA', 'SAN MARTIN',
                                             'JUNIN', 'LA LIBERTAD', 'HUANUCO', 'AYACUCHO', 'ANCASH', 'PASCO',
                                             'CUSCO', 'LAMBAYEQUE', 'HUANCAVELICA', 'PIURA', 'CAJAMARCA',
