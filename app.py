@@ -5,6 +5,8 @@ import numpy
 from sklearn.preprocessing import LabelEncoder
 import os
 
+
+
 # Importado o melhor modelo do arquivo pkl:
 modelo = pickle.load(open('data/modelo_final.pkl', 'rb'))
 params = modelo['resultados']
@@ -14,6 +16,10 @@ def classificar(df):
     "Função de predição/classificação"
     previsoes = params.predict(df)
     return previsoes, params.predict_proba(df)
+
+
+
+# Configuração da página:
 
 st.set_page_config("PrevInad: previna a inadimplência", "💸")
 
@@ -29,7 +35,10 @@ de {round(modelo['f1']*100)}%. E o Modelo com maior precisão foi o {modelo['met
 
 st.header('Preencha os dados do aluno:')
 
-####
+
+
+# Criando função de encoders:
+
 def load_encoders(columns, load_dir='data'):
     """
     Carrega múltiplos encoders previamente salvos como arquivos .pkl.
@@ -87,6 +96,20 @@ def encode_multiple_inputs(input_dict, encoders):
 
     return pd.concat(all_encoded, axis=1)
 
+def processar_variavel(nome_variavel, valor_input, mapa, valores_modelo):
+    # Aplica o mapeamento do nome amigável para o nome usado no modelo
+    valor_mapeado = mapa.get(valor_input, valor_input)
+
+    # Cria dicionário de dummies no formato 'VARIAVEL_VALOR': [0 ou 1]
+    dummies = {
+        f'{nome_variavel}_{valor}': [1 if valor_mapeado == valor else 0]
+        for valor in valores_modelo
+    }
+
+    return valor_mapeado, dummies
+
+# Formulário:
+
 with st.form('user_input_form'):
     genero = st.selectbox('Gênero:', ['Feminino', 'Masculino', 'Indeterminado'])
 
@@ -139,7 +162,7 @@ with st.form('user_input_form'):
 
     modalidade_ensino = st.selectbox('MODALIDADE DE ENSINO:', ['Presencial', 'Virtual', 'Remoto'])
 
-    turno_horario = st.selectbox('TURNO/HORARIO:', ['Manha', 'Tarde', 'Noite', 'Misto'])
+    turno_horario = st.selectbox('TURNO/HORARIO:', ['Manhã', 'Tarde', 'Noite', 'Misto'])
 
     matricula = st.selectbox('MATRICULA:', ['Novo', 'Reincorporado', 'Reinscrito'])
 
@@ -188,19 +211,22 @@ with st.form('user_input_form'):
 
 # Ao submeter
 if submitted:
-# GENERO
+    # GENERO
     genero_m = 1 if genero == 'Masculino' else 0
     genero_u = 1 if genero == 'Indeterminado' else 0
 
-# DEPARTAMENTO
-    departamento_map = {
-        "SAN MARTIN": "SAN_MARTIN",
-        "LA LIBERTAD": "LA_LIBERTAD",
-        "MADRE DE DIOS": "MADRE_DE_DIOS"
-    }
-    departamento = departamento_map.get(departamento, departamento)
+    # DEFICIENCIA
+    deficiencia_modelo = [0, 1]
+    deficiencia_form = ['Não', 'Sim']
+    deficiencia_map = criar_mapa_formulario_modelo(deficiencia_form, deficiencia_modelo)
 
-    # Lista dos departamentos usados no modelo
+    # TURNO
+    turno_modelo = ['Manha', 'Tarde', 'Noite', 'Misto']
+    turno_form = ['Manhã', 'Tarde', 'Noite', 'Misto']
+    turno_map = criar_mapa_formulario_modelo(turno_form,turno_modelo)
+
+
+    # DEPARTAMENTO
     departamentos_modelo = ['SAN_MARTIN',
                             'LA_LIBERTAD',
                             'MADRE_DE_DIOS',
@@ -227,13 +253,75 @@ if submitted:
                             'MOQUEGUA',
                             'TUMBES']
     
-    # Cria as dummies para DEPARTAMENTO
-    departamento_dummies = {
-        f'DEPARTAMENTO_{dep}': [1 if departamento == dep else 0] for dep in departamentos_modelo
+    departamento_map = {
+        "SAN MARTIN": "SAN_MARTIN",
+        "LA LIBERTAD": "LA_LIBERTAD",
+        "MADRE DE DIOS": "MADRE_DE_DIOS"
     }
+
+# CLASSIFICACAO:
+    classificacao_modelo = [
+        'Graduacao',
+        'Graduacao_Semipresencial_50_50',
+        'Graduacao_Semipresencial_80_20',
+        'Curso_para_Trabalhadores',
+        'Graduacao_Virtual'
+    ]
+    
+    classificacao_map = {
+        'Graduação':'Graduacao',
+        'Graduação Semipresencial(50-50)':'Graduacao_Semipresencial_50_50',
+        'Graduação Semipresencial (80-20)':'Graduacao_Semipresencial_80_20',
+        'Curso para Trabalhadores':'Curso_para_Trabalhadores',
+        'Graduação Virtual':'Graduacao_Virtual'
+    }
+
+# CAMPUS
+    campus_modelo = [
+        'Lima_Centro',
+        'Lima_Norte',
+        'Lima_SJL',
+        'Lima_Este',
+        'Lima_Sur',
+        'Arequipa',
+        'Chiclayo',
+        'Piura',
+        'Chimbote',
+        'Huancayo',
+        'Ica',
+        'Beca_18',
+        'Trujillo',
+        'Virtual']
+    
+    campus_map = {
+        'Lima Centro': 'Lima_Centro',
+        'Lima Norte': 'Lima_Norte',
+        'Lima SJL': 'Lima_SJL',
+        'Lima Este': 'Lima_Este',
+        'Lima Sur': 'Lima_Sur',
+        'Arequipa': 'Arequipa',
+        'Chiclayo': 'Chiclayo',
+        'Piura': 'Piura',
+        'Chimbote': 'Chimbote',
+        'Huancayo': 'Huancayo',
+        'Ica': 'Ica',
+        'Beca 18': 'Beca_18',
+        'Trujillo': 'Trujillo',
+        'Virtual': 'Virtual'
+    }
+
+
+    # Variáveis separadas por tipo:
+    dummies = [
+    'PGTO_ANUIDADE_2022', 'MATRICULA', 'GENERO', 'DEPARTAMENTO', 'CLASSIFICACAO', 
+    'CAMPUS', 'FACULDADE', 'TURNO', 'BOLSAS_DESCONTO', 'FAIXA_ETARIA']
+
+    numericas = ['NUMERO_DISCIPLINAS_MATRICULADAS', 'CURSO_EM_RISCO']
 
     # OUTRAS VARIÁVEIS:
 
+    
+    # Cria as dummies para DEPARTAMENTO
 
 
     # Cria dicionário de entrada final
