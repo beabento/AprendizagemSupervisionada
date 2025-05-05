@@ -96,6 +96,26 @@ def encode_multiple_inputs(input_dict, encoders):
 
     return pd.concat(all_encoded, axis=1)
 
+def criar_mapa_formulario_modelo(valores_formulario, valores_modelo):
+    """
+    Cria um dicionário de mapeamento entre os valores do formulário e os valores do modelo.
+
+    Exemplo:
+    'Não' -> 0
+    'Sim' -> 1
+    """
+    mapa = {}
+    
+    # Verifica se o número de valores do formulário é igual ao número de valores no modelo
+    if len(valores_formulario) != len(valores_modelo):
+        raise ValueError("O número de valores do formulário deve ser igual ao número de valores no modelo.")
+
+    # Cria o mapeamento entre os valores do formulário e do modelo
+    for val_form, val_modelo in zip(valores_formulario, valores_modelo):
+        mapa[val_form] = val_modelo
+
+    return mapa
+
 def processar_variavel(nome_variavel, valor_input, mapa, valores_modelo):
     # Aplica o mapeamento do nome amigável para o nome usado no modelo
     valor_mapeado = mapa.get(valor_input, valor_input)
@@ -116,40 +136,8 @@ with st.form('user_input_form'):
     pgto_anuidade_2022 = st.selectbox('Pagou a anuidade de 2022?', ['Sim','Não'])
 
     curso_em_risco_original = st.slider('CURSO EM RISCO (0-5):', 0, 5, 0)
-    # Normalização para o intervalo [0. , 0.4, 0.2, 0.6, 1. , 0.8]
-    # Vamos mapear os valores originais para os normalizados.
-    # Assumindo uma correspondência linear aproximada, mas a ordem dos normalizados não é estritamente crescente.
-    # Uma maneira mais robusta seria ter um dicionário de mapeamento se a relação não for linear.
-    mapeamento_curso_risco = {
-        0: 0.0,
-        1: 0.4,
-        2: 0.2,
-        3: 0.6,
-        4: 1.0,
-        5: 0.8
-    }
-    curso_em_risco = mapeamento_curso_risco[curso_em_risco_original]
 
     num_disciplinas_original = st.slider('NUMERO DE DISCIPLINAS MATRICULADAS (0-6):', 0, 6, 0)
-    # Normalização para o intervalo [0.        , 0.5       , 0.16666667, 0.33333333, 0.66666667, 0.83333333, 1.        ]
-    # Novamente, assumindo uma correspondência por índice, já que a relação não é estritamente linear.
-    # Uma maneira mais robusta seria ter um dicionário de mapeamento.
-    mapeamento_num_disciplinas = {
-        0: 0.0,
-        1: 0.5,
-        2: 0.16666667,
-        3: 0.33333333,
-        4: 0.66666667,
-        5: 0.83333333,
-        6: 1.0
-    }
-    numero_disciplinas_matriculadas = mapeamento_num_disciplinas[num_disciplinas_original]
-
-    # Agora, 'curso_em_risco_normalizado' e 'num_disciplinas_normalizado' contêm os valores
-    # normalizados que você pode usar para alimentar seu modelo de machine learning
-    # dentro do DataFrame 'df'. Por exemplo:
-    # df['CURSO EM RISCO'] = [curso_em_risco_normalizado]
-    # df['NUMERO DE DISCIPLINAS MATRICULADAS'] = [num_disciplinas_normalizado]
 
     departamento = st.selectbox('DEPARTAMENTO:', ['LIMA', 'CALLAO', 'AMAZONAS', 'ICA', 'AREQUIPA', 'SAN MARTIN',
                                                 'JUNIN', 'LA LIBERTAD', 'HUANUCO', 'AYACUCHO', 'ANCASH', 'PASCO',
@@ -216,6 +204,11 @@ if submitted:
     genero_u = 1 if genero == 'Indeterminado' else 0
 
     # DEFICIENCIA
+    deficiencia = 1 if deficiencia == 'Sim' else 0
+
+    # ANUIDADE
+    pgto_anuidade_2022 = 1 if pgto_anuidade_2022 == 'Sim' else 0
+
     deficiencia_modelo = [0, 1]
     deficiencia_form = ['Não', 'Sim']
     deficiencia_map = criar_mapa_formulario_modelo(deficiencia_form, deficiencia_modelo)
