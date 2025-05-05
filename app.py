@@ -458,7 +458,6 @@ if submitted:
 
 
     input_dict.update({'NUMERO_DISCIPLINAS_MATRICULADAS': numero_disciplinas_matriculadas})
-    input_dict
     # Atualizando dicionário para retirar as variáveis de categoria base das dummies:
 
     modelo_vars = ['PGTO_ANUIDADE_2022', 'DEFICIENCIA',
