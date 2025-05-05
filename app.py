@@ -62,11 +62,9 @@ def load_encoders(columns, load_dir='data'):
 
     return encoders
 
-columns = ['MATRICULA', 'PAGAMENTO DE ANUIDADE MARÇO 2022', 'PAGAMENTO DE ANUIDADE MARÇO 2023',
-        'GENERO', 'DEPARTAMENTO', 'PROVINCIA', 'DISTRITO', 'CLASSIFICACAO', 'CAMPUS',
-        'FACULDADE', 'PROGRAMA/CURSO', 'TURNO/HORARIO', 'BOLSAS DE DESCONTO',
-        'MODALIDADE DE ENSINO', 'FAIXA ETARIA', 'DEFICIENCIA',
-        'CURSO EM RISCO']
+columns = ['MATRICULA', 'PGTO_ANUIDADE_2022', 'GENERO',
+       'DEPARTAMENTO', 'CLASSIFICACAO', 'CAMPUS', 'FACULDADE', 'TURNO',
+       'BOLSAS_DESCONTO', 'FAIXA_ETARIA', 'DEFICIENCIA']
 
 encoders = load_encoders(columns, load_dir='data')
 
@@ -87,6 +85,10 @@ def encode_multiple_inputs(input_dict, encoders):
         if isinstance(value, list):
             value = value[0]
         temp_df = pd.DataFrame({col: [value]})
+        print(f"Valor para a coluna '{col}': {value}")
+        print(f"Tipo do valor: {type(value)}")
+        if pd.isna(value):
+            print(f"Atenção: O valor para '{col}' é NaN")
         encoded_array = encoder.transform(temp_df[[col]])
         encoded_df = pd.DataFrame(
             encoded_array,
@@ -552,14 +554,16 @@ if submitted:
 
     for i in modelo_vars:
         novo_dict[i] = input_dict[i]
-    input_dict = novo_dict 
+    input_dict = novo_dict
+    data = {key: value[0] if isinstance(value, list) else value for key, value in input_dict.items()}
+    input_df = pd.DataFrame([data])
 
     # Aplica o encode, se necessário
-    encoded_df = encode_multiple_inputs(input_dict, encoders)
+    # encoded_df = encode_multiple_inputs(input_dict, encoders)
 
     # Faz a predição com o modelo de regressão logística
-    pred = params.predict(encoded_df)[0]
-    prob = params.predict_proba(encoded_df)[0][1]  # probabilidade da classe 1, se for binário
+    pred = params.predict(input_df)[0]
+    prob = params.predict_proba(input_df)[0][1]  # probabilidade da classe 1, se for binário
 
     # Exibe o resultado
     st.markdown("### Resultado da Predição")
