@@ -38,67 +38,7 @@ Atualizado em 04/05/2025
 st.header('Preencha os dados do aluno:')
 
 
-
-# Criando função de encoders:
-
-def load_encoders(columns, load_dir='data'):
-    """
-    Carrega múltiplos encoders previamente salvos como arquivos .pkl.
-
-    Parâmetros:
-    - columns: lista de nomes de colunas (ex: ['DEPARTAMENTO', 'PROVINCIA']).
-    - load_dir: diretório onde os arquivos .pkl estão salvos.
-
-    Retorna:
-    - Um dicionário com nome_da_coluna → encoder
-    """
-    encoders = {}
-
-    for col in columns:
-        filename = f"{col.lower().replace('/', '_').replace(' ', '_')}_encoder.pkl"
-        #filename = f"{col.lower()}_encoder.pkl"
-        file_path = os.path.join(load_dir, filename)
-
-        with open(file_path, 'rb') as f:
-            encoders[col] = pickle.load(f)
-
-    return encoders
-
-columns = ['MATRICULA', 'PGTO_ANUIDADE_2022', 'GENERO',
-       'DEPARTAMENTO', 'CLASSIFICACAO', 'CAMPUS', 'FACULDADE', 'TURNO',
-       'BOLSAS_DESCONTO', 'FAIXA_ETARIA', 'DEFICIENCIA']
-
-encoders = load_encoders(columns, load_dir='data')
-
-def encode_multiple_inputs(input_dict, encoders):
-    all_encoded = []
-
-    for col, value in input_dict.items():
-        # Se a variável não tem encoder, usa valor diretamente
-        if col not in encoders:
-            if isinstance(value, list):
-                value = value[0]
-            temp_df = pd.DataFrame({col: [value]})
-            all_encoded.append(temp_df)
-            continue
-
-        # Caso contrário, aplica encoder
-        encoder = encoders[col]
-        if isinstance(value, list):
-            value = value[0]
-        temp_df = pd.DataFrame({col: [value]})
-        print(f"Valor para a coluna '{col}': {value}")
-        print(f"Tipo do valor: {type(value)}")
-        if pd.isna(value):
-            print(f"Atenção: O valor para '{col}' é NaN")
-        encoded_array = encoder.transform(temp_df[[col]])
-        encoded_df = pd.DataFrame(
-            encoded_array,
-            columns=encoder.get_feature_names_out([col])
-        )
-        all_encoded.append(encoded_df)
-
-    return pd.concat(all_encoded, axis=1)
+# Definindo funções de transformação e tradução de valores
 
 def criar_mapa_formulario_modelo(valores_formulario, valores_modelo):
     """
