@@ -31,6 +31,8 @@ através do uso de modelos de Aprendizado de Máquina (Machine Learning).
 
 O modelo usado neste APP foi selecionado por meio de uma validação cruzada, tendo um F1
 de {round(modelo['f1']*100)}%. E o Modelo com maior precisão foi o {modelo['metodo']}.
+
+Atualizado em 04/05/2025
 """)
 
 st.header('Preencha os dados do aluno:')
