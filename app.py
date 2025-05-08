@@ -31,8 +31,6 @@ através do uso de modelos de Aprendizado de Máquina (Machine Learning).
 
 O modelo usado neste APP foi selecionado por meio de uma validação cruzada, tendo um F1
 de {round(modelo['f1']*100)}%. E o Modelo com maior precisão foi o {modelo['metodo']}.
-
-Atualizado em 04/05/2025
 """)
 
 st.header('Preencha os dados do aluno:')
@@ -506,11 +504,14 @@ if submitted:
     pred = params.predict(input_df)[0]
     prob = params.predict_proba(input_df)[0][1]  # probabilidade da classe 1, se for binário
 
+    # Mapeia a classe prevista para um rótulo mais legível
+    classe_map = {0: "Inadimplente", 1: "Adimplente"}
+    classe_prevista = classe_map[pred]
+
     # Exibe o resultado
     st.markdown("### Resultado da Predição")
-    st.write(f"**Classe prevista:** {pred}")
-    st.write(f"**Probabilidade (risco):** {prob:.2%}")
-
+    st.write(f"**Classe prevista:** {classe_prevista}")
+    st.write(f"**Probabilidade de adimplência:** {prob:.2%}")
 
 # if submitted:
 #     # Codifica os inputs
