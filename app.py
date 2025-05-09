@@ -22,7 +22,7 @@ def classificar(df):
 
 # Configuração da página:
 
-st.set_page_config("PrevInad: previna a inadimplência", "💸")
+st.set_page_config("PrevInad: previna a inadimplência", "💡")
 
 st.title("PrevInad")
 
