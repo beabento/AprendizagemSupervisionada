@@ -1,9 +1,10 @@
 import pandas as pd
 import streamlit as st
 import pickle
-import numpy
+import numpy as np
 from sklearn.preprocessing import LabelEncoder
 import os
+import altair as alt
 
 
 
@@ -512,6 +513,40 @@ if submitted:
     st.markdown("### Resultado da Predição")
     st.write(f"**Classe prevista:** {classe_prevista}")
     st.write(f"**Probabilidade de adimplência:** {prob:.2%}")
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    # Gráfico de importância das variáveis:
+    if hasattr(params, 'coef_'):
+        coefficients = params.coef_[0]
+
+        feature_names = None
+        if hasattr(params, 'feature_names_'):
+            feature_names = params.feature_names_
+        else:
+            feature_names = modelo_vars # Usando modelo_vars como fallback
+
+        if feature_names is not None and len(feature_names) == len(coefficients):
+            # Criar DataFrame
+            importance_df = pd.DataFrame({'Feature': feature_names, 'Coefficient': coefficients})
+            importance_df['Magnitude'] = np.abs(importance_df['Coefficient'])
+            importance_df = importance_df.sort_values(by='Magnitude', ascending=False).head(10)
+
+            # Criar o gráfico de barras
+            chart = alt.Chart(importance_df).mark_bar().encode(
+                x=alt.X('Coefficient:Q'),
+                y=alt.Y('Feature:N', sort='-x'),
+                color=alt.Color('Coefficient:Q', scale=alt.Scale(scheme='viridis')),
+                tooltip=['Feature', 'Coefficient']
+            ).properties(
+                title='Top 10 Variáveis Mais Influentes (Magnitude dos Coeficientes)'
+            )
+            st.altair_chart(chart, use_container_width=True)
+        else:
+            st.warning("Não foi possível determinar os nomes das variáveis ou houve uma incompatibilidade com o número de coeficientes.")
+            st.info("Certifique-se de que a lista 'modelo_vars' está definida corretamente e corresponde à ordem das variáveis usadas no modelo.")
+    else:
+        st.warning("O modelo de regressão logística não possui o atributo 'coef_'.")
+        st.info("A importância das variáveis pode ser interpretada analisando os coeficientes do modelo (não visualizados aqui).")
 
 # if submitted:
 #     # Codifica os inputs
