@@ -498,9 +498,6 @@ if submitted:
     data = {key: value[0] if isinstance(value, list) else value for key, value in input_dict.items()}
     input_df = pd.DataFrame([data])
 
-    # Aplica o encode, se necessário
-    # encoded_df = encode_multiple_inputs(input_dict, encoders)
-
     # Faz a predição com o modelo de regressão logística
     pred = params.predict(input_df)[0]
     prob = params.predict_proba(input_df)[0][1]  # probabilidade da classe 1, se for binário
@@ -515,7 +512,8 @@ if submitted:
     st.write(f"**Probabilidade de adimplência:** {prob:.2%}")
 
     st.markdown("<br><br>", unsafe_allow_html=True)
-    # Gráfico de importância das variáveis:
+
+    # Gráfico dos coeficientes:
     if hasattr(params, 'coef_'):
         coefficients = params.coef_[0]
 
@@ -547,18 +545,5 @@ if submitted:
     else:
         st.warning("O modelo de regressão logística não possui o atributo 'coef_'.")
         st.info("A importância das variáveis pode ser interpretada analisando os coeficientes do modelo (não visualizados aqui).")
-
-# if submitted:
-#     # Codifica os inputs
-#     encoded_df = encode_multiple_inputs(input_dict, encoders)
-
-#     # Faz a predição com o modelo de regressão logística
-#     pred = params.predict(encoded_df)[0]
-#     prob = params.predict_proba(encoded_df)[0][1]  # probabilidade da classe 1, se for binário
-
-#     # Exibe o resultado
-#     st.markdown("### Resultado da Predição")
-#     st.write(f"**Classe prevista:** {pred}")
-#     st.write(f"**Probabilidade (risco):** {prob:.2%}")
 
 
